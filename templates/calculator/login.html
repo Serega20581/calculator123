@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <style>
+        :root {
+            --bg: #020617;
+            --bg-accent: #0b1220;
+            --card-bg: #020617;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.14);
+            --accent-strong: #2563eb;
+            --border: #1f2937;
+            --border-soft: rgba(148, 163, 184, 0.3);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --error: #fca5a5;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(59, 130, 246, 0.25), transparent 55%),
+                radial-gradient(circle at bottom, rgba(15, 23, 42, 0.9), #020617 60%);
+            color: var(--text-main);
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 60%),
+                        var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 28px 60px rgba(0, 0, 0, 0.8);
+            padding: 24px 22px 22px;
+            backdrop-filter: blur(16px);
+        }
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 650;
+            letter-spacing: 0.03em;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        form { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+
+        label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+
+        input {
+            width: 100%;
+            background: linear-gradient(135deg, #020617, #030712);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 9px 11px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, transform 0.08s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.7);
+            background: #020617;
+            transform: translateY(-0.5px);
+        }
+
+        button[type="submit"] {
+            margin-top: 6px;
+            border-radius: 999px;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 650;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: #e5f2ff;
+            cursor: pointer;
+            box-shadow:
+                0 14px 32px rgba(37, 99, 235, 0.6),
+                0 0 0 1px rgba(15, 23, 42, 0.8);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 40px rgba(37, 99, 235, 0.8);
+            filter: brightness(1.02);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 22px rgba(30, 64, 175, 0.9);
+        }
+
+        .links {
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .links a {
+            color: #9ca3af;
+            text-decoration: none;
+        }
+
+        .links a:hover { color: #bfdbfe; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="card">
+        <div class="title">Вход в аккаунт</div>
+        <div class="subtitle">Используйте учётные данные, чтобы просматривать вашу историю операций.</div>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Войти</button>
+        </form>
+
+        <div class="links">
+            <span>Нет аккаунта? <a href="{% url 'signup' %}">Зарегистрироваться</a></span>
+            <a href="{% url 'calculator' %}">← Назад к калькулятору</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

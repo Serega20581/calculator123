@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор</title>
+    <style>
+        :root {
+            --bg: #020617;
+            --bg-accent: #0b1220;
+            --card-bg: #020617;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.14);
+            --accent-strong: #2563eb;
+            --border: #1f2937;
+            --border-soft: rgba(148, 163, 184, 0.3);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --error: #fca5a5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(59, 130, 246, 0.25), transparent 55%),
+                radial-gradient(circle at bottom, rgba(15, 23, 42, 0.9), #020617 60%);
+            color: var(--text-main);
+        }
+
+        .calculator-wrapper {
+            width: 100%;
+            max-width: 460px;
+            padding: 24px;
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 60%),
+                        var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 28px 60px rgba(0, 0, 0, 0.8);
+            padding: 24px 22px 22px;
+            backdrop-filter: blur(16px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 650;
+            letter-spacing: 0.03em;
+        }
+
+        .subtitle {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .pill {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 5px 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(59, 130, 246, 0.6);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.16), rgba(14, 165, 233, 0.18));
+            color: #dbeafe;
+        }
+
+        .auth-links {
+            display: flex;
+            gap: 10px;
+            font-size: 0.78rem;
+            align-items: center;
+        }
+
+        .auth-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            color: #bfdbfe;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        input[type="number"],
+        select {
+            background: linear-gradient(135deg, #020617, #030712);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 9px 11px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, transform 0.08s ease;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.7);
+            background: #020617;
+            transform: translateY(-0.5px);
+        }
+
+        .row {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button[type="submit"] {
+            margin-top: 8px;
+            border-radius: 999px;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 650;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: #e5f2ff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow:
+                0 14px 32px rgba(37, 99, 235, 0.6),
+                0 0 0 1px rgba(15, 23, 42, 0.8);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 40px rgba(37, 99, 235, 0.8);
+            filter: brightness(1.02);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 22px rgba(30, 64, 175, 0.9);
+        }
+
+        .btn-icon {
+            font-size: 1rem;
+        }
+
+        .helper {
+            margin-top: 10px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .result,
+        .error {
+            margin-top: 16px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .result {
+            border: 1px solid rgba(59, 130, 246, 0.6);
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.25), transparent 70%),
+                        var(--accent-soft);
+            color: #dbeafe;
+        }
+
+        .result strong {
+            font-size: 1.1rem;
+        }
+
+        .error {
+            border: 1px solid rgba(248, 113, 113, 0.7);
+            background: rgba(127, 29, 29, 0.45);
+            color: var(--error);
+        }
+
+        @media (max-width: 480px) {
+            .calculator-wrapper {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 20px 16px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="calculator-wrapper">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="title">Простой калькулятор</div>
+                <div class="subtitle">Сложение · Вычитание · Умножение · Деление</div>
+            </div>
+            <div style="display:flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                <div class="pill">Django · Templates</div>
+                <div class="auth-links">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: var(--text-muted);">{{ request.user.username }}</span>
+                        <a href="{% url 'history' %}">Моя история</a>
+                        <a href="{% url 'logout' %}">Выйти</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Войти</a>
+                        <a href="{% url 'signup' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="field">
+                    <label for="id_a">Первое число</label>
+                    <input id="id_a" type="number" name="a" step="any" value="{{ a|default_if_none:'' }}">
+                </div>
+
+                <div class="field">
+                    <label for="id_b">Второе число</label>
+                    <input id="id_b" type="number" name="b" step="any" value="{{ b|default_if_none:'' }}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="id_op">Операция</label>
+                <select id="id_op" name="operation">
+                    <option value="" {% if not operation %}selected{% endif %}>— выберите операцию —</option>
+                    <option value="add" {% if operation == 'add' %}selected{% endif %}>Сложение (+)</option>
+                    <option value="sub" {% if operation == 'sub' %}selected{% endif %}>Вычитание (−)</option>
+                    <option value="mul" {% if operation == 'mul' %}selected{% endif %}>Умножение (×)</option>
+                    <option value="div" {% if operation == 'div' %}selected{% endif %}>Деление (÷)</option>
+                </select>
+            </div>
+
+            <button type="submit">Посчитать</button>
+
+            <div class="helper">Введите числа, выберите операцию и нажмите «Посчитать».</div>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if result is not None and not error %}
+            <div class="result">Результат: <strong>{{ result }}</strong></div>
+        {% endif %}
+
+        {% if history %}
+            <div style="margin-top: 16px;">
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">
+                    История вычислений
+                </div>
+                <div style="max-height: 180px; overflow-y: auto; border-radius: 10px; border: 1px solid rgba(148, 163, 184, 0.2); background: rgba(15, 23, 42, 0.85);">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem;">
+                        <thead>
+                        <tr style="color: var(--text-muted); text-align: left;">
+                            <th style="padding: 6px 10px; font-weight: 500;">№</th>
+                            <th style="padding: 6px 10px; font-weight: 500;">Выражение</th>
+                            <th style="padding: 6px 10px; font-weight: 500; text-align: right;">Результат</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in history %}
+                            <tr style="border-top: 1px solid rgba(31, 41, 55, 0.9);">
+                                <td style="padding: 6px 10px; color: var(--text-muted);">{{ forloop.counter }}</td>
+                                <td style="padding: 6px 10px;">
+                                    {% if item.operation == 'add' %}
+                                        {{ item.a }} + {{ item.b }}
+                                    {% elif item.operation == 'sub' %}
+                                        {{ item.a }} − {{ item.b }}
+                                    {% elif item.operation == 'mul' %}
+                                        {{ item.a }} × {{ item.b }}
+                                    {% elif item.operation == 'div' %}
+                                        {{ item.a }} ÷ {{ item.b }}
+                                    {% else %}
+                                        {{ item.a }} ? {{ item.b }}
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 6px 10px; text-align: right; color: #bbf7d0;">{{ item.result }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
